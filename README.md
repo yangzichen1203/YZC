@@ -1,0 +1,2 @@
+# YZC
+A Tiny AI
