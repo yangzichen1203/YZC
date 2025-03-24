@@ -8,7 +8,7 @@
 #define MAXN 9
 #define MAXP 3
 #define MAXMP 52464
-#define MAP 100
+#define MAP 1000
 #define PLANE 3
 #define STUDY 5.0
 #define MAXBLOCK 1000
@@ -136,26 +136,17 @@ double f(double x){
 	return x*STUDY;
 }
 double test(int m){
-	double map[MAXN][MAXN],now[MAXN*MAXN],next[MAXN*MAXN];
-	For(i,0,MAXN-1){
-		For(j,0,MAXN-1){
-			map[i][j]=0;
-		}
-	}
+	double map[MAXN*MAXN],next[MAXN*MAXN];
+	memset(map,0,sizeof(map));
 	int headsum=MAXP;
 	double ans=1,p=1;
-	map[MAXN/2][MAXN/2]=(mp[m][MAXN/2][MAXN/2]+1)/3.0;
+	map[(MAXN/2)*MAXN+MAXN/2]=(mp[m][MAXN/2][MAXN/2]+1)/3.0;
 	if(mp[m][MAXN/2][MAXN/2]==2) headsum--;
 	while(headsum>MAXP-PLANE){
-		For(i,0,MAXN-1){
-			For(j,0,MAXN-1){
-				now[i*MAXN+j]=map[i][j];
-			}
-		}
 		memset(next,0,sizeof(next));
 		For(i,0,MAXN*MAXN-1){
 			For(j,0,MAXN*MAXN-1){
-				next[j]+=now[i]*ai.w[i][j];
+				next[j]+=map[i]*ai.w[i][j];
 			}
 		}
 		For(i,0,MAXN*MAXN-1){
@@ -163,14 +154,14 @@ double test(int m){
 		}
 		int fire;
 		double Max=-1;
-		For(i,0,MAXN*MAXN-1){ 
-			if(next[i]>Max&&map[i/MAXN][i%MAXN]==0){
+		For(i,0,MAXN*MAXN-1){
+			if(next[i]>Max&&map[i]==0){
 				Max=next[i];
 				fire=i;
 			}
 		}
 		int x=fire/MAXN,y=fire%MAXN;
-		map[x][y]=(mp[m][x][y]+1)/3.0;
+		map[fire]=(mp[m][x][y]+1)/3.0;
 		if(mp[m][x][y]==2){
 			headsum--;//p*=ans;ans=0;
 		}
