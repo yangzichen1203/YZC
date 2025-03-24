@@ -8,11 +8,11 @@
 #define MAXN 9
 #define MAXP 3
 #define MAXMP 52464
-#define MAP 1000
+#define MAP 100
 #define PLANE 3
-#define STUDY 10.0
+#define STUDY 5.0
 #define MAXBLOCK 1000
-double STEP=0.01;
+double STEP=0.02;
 using namespace std;
 struct Node{
 	int x,y,d;
@@ -132,9 +132,6 @@ class AI{
 			printf("\n");
 		}
 }ai;
-double sigmoid(double x){
-	return 1.0/(1+exp(-x));
-}
 double f(double x){
 	return x*STUDY;
 }
@@ -162,17 +159,14 @@ double test(int m){
 			}
 		}
 		For(i,0,MAXN*MAXN-1){
-			now[i]=sigmoid(next[i]+ai.b[i]);
+			next[i]+=ai.b[i];
 		}
 		int fire;
 		double Max=-1;
-		For(i,0,MAXN*MAXN-1){
-			int x=i/MAXN,y=i%MAXN;
-			if(now[i]>Max){
-				if(map[x][y]==0){
-					Max=now[i];
-					fire=i;
-				}
+		For(i,0,MAXN*MAXN-1){ 
+			if(next[i]>Max&&map[i/MAXN][i%MAXN]==0){
+				Max=next[i];
+				fire=i;
 			}
 		}
 		int x=fire/MAXN,y=fire%MAXN;
@@ -361,11 +355,14 @@ int main(){
 				t.push_back(Rand()%MAXMP);
 			}
 		}
+		clock_t begin=clock();
 		s2=point2();
 		printf("Point=%.3lf\n",s2);
 		Log2.push_back(s2);
 		walk1();
 		change();
+		clock_t end=clock();
+		printf("Time=%.3lf\n",1.0*(end-begin)/CLOCKS_PER_SEC);
 		generation++;
 	}
 	return 0;
